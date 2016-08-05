@@ -232,7 +232,7 @@ def example_get_chat_messages(user):
     data = json.loads(response.text)
     return data
 
-user_email = 'gregor.kuznik@gmail.com'
+user_email = 'nina.mrzelj@gmail.com'
 print(example_get_user_by_email(user_email))
 user = User(example_get_user_by_email(user_email))
 group_id = example_get_groups_of_user(user)
