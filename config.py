@@ -8,8 +8,8 @@ SMART_ASSISTANT = {
         'PORT': 5001
     },
     'AUTH': {
-        'KEY': '9e8b941a-ea27-4fa4-bc6b-03db0460b4e7@4thoffice.com',
-        'SECRET': '23649c1c-3346-f74e-c151-015f9142810e'
+        'KEY': '8ca9bcf5-8221-49f6-a303-80664dfa0818@4thoffice.com',
+        'SECRET': 'ad56d987-99fc-4aef-c1fe-5bee41ceca0c'
     },
     'NAME': 'LondonChallenge'
 }
