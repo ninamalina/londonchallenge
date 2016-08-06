@@ -1,6 +1,9 @@
 import io
 import json
 import rauth
+from urllib2 import urlopen
+import json
+
 
 def get_search_parameters(lat, long):
     # See the Yelp API for more details
@@ -18,10 +21,23 @@ with io.open('config_secret.json') as cred:
     session = rauth.OAuth1Session(**creds)
 
 
-params = get_search_parameters(51.502096, -0.024820)
+f = urlopen('http://freegeoip.net/json/')
+json_string = f.read()
+f.close()
+location = json.loads(json_string)
+print(location)
+lat = location['latitude']
+lon = location['longitude']
+
+print lat, lon
+
+params = get_search_parameters(lat, lon)
 
 request = session.get("http://api.yelp.com/v2/search", params=params)
 data = request.json()
 session.close()
 
 print data
+
+
+

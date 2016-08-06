@@ -1,6 +1,6 @@
 import facebook
 
-graph = facebook.GraphAPI(access_token='EAACEdEose0cBAIXOt5mzpmrQoWecbZC2hDgEM4OlUl38fXfSpeXZB2FAUs54lxMiZAijpBM0p1Dtn97zyb76A041zMO1CPR3TIeeMSfLG426GZBCl5fDHfB1YMTFq7NaYCw0zy9Q1AS72ke0704iIiWk4kJrZC9xnv6of0ovZBxAZDZD', version='2.2');
+graph = facebook.GraphAPI(access_token='EAACEdEose0cBAIY0fH3jUcFDXCogKTB1dLgSdslVFROfRPg97eCVaQZCgUss6r5cmaVXZCKqu2iADhd9fxhuFVTdb8vv3sNqU6bRj6ZC0Spd8dujZAj53hCYh5ZAQUZBJzzSdCSsZCOZBsjIbbyjyusZB9ereAKQ3i3AmLOfIdT8qBAZDZD', version='2.2');
 user = graph.get_object("me")
 
 first_name = user['first_name']
@@ -19,8 +19,20 @@ while 'next' in likes['paging']:
     likes = graph.get_object("me/likes?after=" + likes['paging']['cursors']['after'])
 
 food_likes = []
+categories = []
+
 for like in likes_list:
-    if like['category'] == 'Food/Beverages':
+    if like['category'] in ['Food/Beverages', 'Restaurant/Cafe', 'Bar']:
         food_likes.append(like)
+        like_id = like['id']
+        like_object = graph.get_object(id = like_id)
+        print like_object
+        if 'category_list' in like_object:
+            categories.append(like_object['category_list'])
+
+
+print food_likes
+print categories
+
 #friends = graph.get_connections(user["id"], "friends")
 
