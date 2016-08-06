@@ -17,7 +17,7 @@ def example_send_push_notification(user):
 
     if not 200 < response.status_code < 300:
         response.raise_for_status()
-
+    print response
     data = json.loads(response.text)
     return data
 
@@ -238,6 +238,7 @@ user = User(example_get_user_by_email(user_email))
 group_id = example_get_groups_of_user(user)
 group = Group(example_get_group(user.id, group_id))
 print(group)
-#result = example_send_push_notification(user)
+result = example_send_push_notification(user)
+print result
 #result = example_post_new_card_with_impersonation(user, user.id)
 #print(result)
