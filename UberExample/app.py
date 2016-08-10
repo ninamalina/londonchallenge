@@ -21,13 +21,14 @@ with open('config.json') as f:
 
 def generate_oauth_service():
     """Prepare the OAuth2Service that is used to make requests later."""
+
     return OAuth2Service(
         client_id=config.get('CLIENT_ID'),
         client_secret=config.get('CLIENT_SECRET'),
         name=config.get('name'),
         authorize_url=config.get('authorize_url'),
         access_token_url=config.get('access_token_url'),
-        base_url='http://localhost:7000/submit',
+        base_url=config.get('base_url'),
     )
 
 
@@ -207,39 +208,8 @@ def requests():
     )
 
 
-
-@app.route('/requests2', methods=['GET'])
-def requests2():
-    from uber_rides.session import Session
-    session = Session(server_token=YOUR_SERVER_TOKEN)
-
-    from uber_rides.client import UberRidesClient
-    client = UberRidesClient(session)
-    response = client.get_products(37.77, -122.41)
-    products = response.json.get('products')
-
-    from uber_rides.auth import AuthorizationCodeGrant
-    auth_flow = AuthorizationCodeGrant(
-        YOUR_CLIENT_ID,
-        YOUR_PERMISSION_SCOPES,
-        YOUR_CLIENT_SECRET,
-        YOUR_REDIRECT_URL,
-    )
-    auth_url = auth_flow.get_authorization_url()
-
-    session = auth_flow.get_session(redirect_url)
-    client = UberRidesClient(session)
-    credentials = session.oauth2credential
-
-    response = client.get_products(37.77, -122.41)
-    products = response.json.get('products')
-    product_id = products[0].get('product_id')
-
-    response = client.request_ride(product_id, 37.77, -122.41, 37.79, -122.41)
-    ride_details = response.json
-    ride_id = ride_details.get('request_id')
-
-    client = UberRidesClient(session, sandbox_mode=True)
+@app.route('/requests1', methods=['GET'])
+def requests1():
 
     url = config.get('base_uber_url_SANDBOX') + 'requests'
     params = {
@@ -266,6 +236,70 @@ def requests2():
         'results.html',
         endpoint='requests',
         data=response.text,
+    )
+
+@app.route('/requests2', methods=['GET'])
+def requests2():
+
+    from uber_rides.client import UberRidesClient
+    from uber_rides.session import Session
+
+
+    sessionUberRides = Session(server_token=config.get('server_token'))
+
+    client = UberRidesClient(sessionUberRides, sandbox_mode=True)
+    print sessionUberRides
+
+    response = client.get_products(config.get('start_latitude'), config.get('start_longitude'))
+    products = response.json.get('products')
+    product_id = products[0].get('product_id')
+
+    print product_id
+
+    print response.status_code
+    client = UberRidesClient(generate_oauth_service(), sandbox_mode=True)
+
+    responseUber = client.request_ride(
+        product_id=product_id,
+        start_latitude=config.get('start_latitude'),
+        start_longitude=config.get('start_longitude'),
+        end_latitude=config.get('end_latitude'),
+        end_longitude=config.get('end_longitude'),
+    )
+
+    print responseUber
+    ride_details = responseUber.json
+    print ride_details
+    ride_id = ride_details.get('request_id')
+
+    responseUber = client.update_sandbox_ride(ride_id, 'accepted')
+
+
+    # url = config.get('base_uber_url_SANDBOX') + 'requests'
+    # params = {
+    #     'start_latitude': config.get('start_latitude'),
+    #     'start_longitude': config.get('start_longitude'),
+    #     'end_latitude': config.get('end_latitude'),
+    #     'end_longitude': config.get('end_longitude'),
+    # }
+    #
+    #
+    # print url, generate_ride_headers(session.get('access_token'))
+    # response = app.requests_session.post(
+    #     url,
+    #     headers=generate_ride_headers(session.get('access_token')),
+    #     data=params
+    # )
+    #
+    #
+    # print response
+
+    if response.status_code != 204 :
+        return 'There was an error ' + response
+    return render_template(
+        'results.html',
+        endpoint='requests',
+        data=responseUber,
     )
 
 @app.route('/history', methods=['GET'])

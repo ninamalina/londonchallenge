@@ -6,11 +6,12 @@
     "name": "4thOffice London Challenge",
     "CLIENT_ID" : "NegXW3g2OE1MXG4lwpMyowTnxj-8xmuP",
     "CLIENT_SECRET" : "c1Q111i6ylOHU-WoipoJxisiQdPcEXIDvudgqOiK",
+    "server_token" : "OfwjEEZID3kWJo4qaAX3FVyIUthgFRJbbk3W8Mvf",
     "base_uber_url_SANDBOX": "https://sandbox-api.uber.com/v1/",
     "base_uber_url": "https://api.uber.com/v1/",
     "base_uber_url_v1_2" : "https://api.uber.com/v1.2/",
-    "start_latitude": "37.781955",
-    "start_longitude":  "-122.402367",
-    "end_latitude": "37.744352",
-    "end_longitude": "-122.416743"
+    "start_latitude": "51.5126",
+    "start_longitude":  "-0.1304",
+    "end_latitude": "51.5326",
+    "end_longitude": "-0.1284"
 }
